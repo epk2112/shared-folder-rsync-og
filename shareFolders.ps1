@@ -1,47 +1,41 @@
+
+# Define the source path to watch
+$sourcePath = "C:\Users\Docker\Desktop\monitoreFolder\"
+
+
+# Create a new file system watcher
 $watcher = New-Object System.IO.FileSystemWatcher
-$watcher.Path = "C:\Users\Docker\Desktop\monitoreFolder"
+$watcher.Path = $sourcePath
 $watcher.IncludeSubdirectories = $true
 $watcher.EnableRaisingEvents = $true
 
-$created = Register-ObjectEvent $watcher "Created" -SourceIdentifier FileCreated -Action {
-    $fileInfo = $Event.SourceEventArgs.FullPath
+# Event handler for file changes
+$actionScript = {
+    $path = $Event.SourceEventArgs.FullPath
+    $changeType = $Event.SourceEventArgs.ChangeType
+    Write-Host "File $changeType : $path" -ForegroundColor Green
 
-    # Run a powershell command and capture its output
-    $output = Invoke-Expression -Command "C:\rsync-win\rsync-win.exe -r --progress --src '/cygdrive/c/Users/Docker/Downloads/Downloads_server/' --dest '/cygdrive/c/Users/Docker/Desktop/bongoDir/'" 2>&1 | Out-String
-
-    # Display the output
+    # Run rsync-win command
+    $output = & rsync-win -ar --progress  --src "C:\Users\Docker\Desktop\monitoreFolder\" --dest "C:\Users\Docker\Desktop\destFolder\" 2>&1
     Write-Host $output
-    
-    Write-Host "File created: $fileInfo" -ForegroundColor Green
 }
 
-$changed = Register-ObjectEvent $watcher "Changed" -SourceIdentifier FileChanged -Action {
-    $fileInfo = $Event.SourceEventArgs.FullPath
-    Write-Host "File changed: $fileInfo" -ForegroundColor Yellow
-}
+# Register the event handler for file changes
+Register-ObjectEvent -InputObject $watcher -EventName "Created" -Action $actionScript
+Register-ObjectEvent -InputObject $watcher -EventName "Changed" -Action $actionScript
+Register-ObjectEvent -InputObject $watcher -EventName "Deleted" -Action $actionScript
+Register-ObjectEvent -InputObject $watcher -EventName "Renamed" -Action $actionScript
 
-$deleted = Register-ObjectEvent $watcher "Deleted" -SourceIdentifier FileDeleted -Action {
-    $fileInfo = $Event.SourceEventArgs.FullPath
-    Write-Host "File deleted: $fileInfo" -ForegroundColor Red
-}
-
-$renamed = Register-ObjectEvent $watcher "Renamed" -SourceIdentifier FileRenamed -Action {
-    $fileInfo = $Event.SourceEventArgs.FullPath
-    Write-Host "File renamed: $fileInfo" -ForegroundColor Cyan
-}
-
+# Display monitoring info
 Write-Host "Monitoring directory: $($watcher.Path)"
 Write-Host "Press 'CTRL+C' to stop monitoring."
 
+# Wait for events
 try {
     while ($true) {
-        Start-Sleep -Milliseconds 100
+        Start-Sleep -Seconds 1
     }
 }
 finally {
-    Unregister-Event $created.Id
-    Unregister-Event $changed.Id
-    Unregister-Event $deleted.Id
-    Unregister-Event $renamed.Id
     $watcher.Dispose()
 }
