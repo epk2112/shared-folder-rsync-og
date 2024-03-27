@@ -1,0 +1,44 @@
+rsync -ahP --progress -e "ssh -i gcp-vms1" /home/cheatedepk/projects/windows11/data/windows.rom cheatedepk@35.192.23.148:/home/cheatedepk/projects/windows11/data/
+
+
+rsync -ahP --progress -e "ssh -i gcp-vms1" /home/cheatedepk/projects/windows11/data/data.img cheatedepk@34.41.249.69:/home/cheatedepk/projects/windows11/data/
+
+
+rsync -ahP --progress  'C:\Users\Docker\Downloads\Downloads_server\' 'C:\Users\Docker\Desktop\bongoDir\'
+
+
+rsync -ahP --progress '/cygdrive/c/Users/Docker/Downloads/Downloads_server/' '/cygdrive/c/Users/Docker/Desktop/bongoDir/'
+
+
+cheatedepk@34.41.249.69:/home/cheatedepk/projects/tempFolder
+
+
+# Good One windows for remote
+C:\rsync-win\rsync-win.exe  -r --progress -i gcp-vms1 --src '/cygdrive/c/Users/Docker/Downloads/Downloads_server/' --dest cheatedepk@34.41.249.69:/home/cheatedepk/projects/tempFolder
+
+# Good One windows same machine
+C:\rsync-win\rsync-win.exe  -r --progress --src '/cygdrive/c/Users/Docker/Downloads/Downloads_server/' --dest '/cygdrive/c/Users/Docker/Desktop/bongoDir/'
+
+# Good one Windows same machine after adding environmental variable to PATH
+rsync-win -r --progress --src '/cygdrive/c/Users/Docker/Downloads/Downloads_server/' --dest '/cygdrive/c/Users/Docker/Desktop/bongoDir/'
+
+# Good one Windows for remote after adding environmental variable to PATH
+rsync-win  -r --progress -i gcp-vms1 --src '/cygdrive/c/Users/Docker/Downloads/Downloads_server/' --dest cheatedepk@34.41.249.69:/home/cheatedepk/projects/tempFolder
+
+
+# Good one Windows same machine (normal path)
+rsync-win -ar --progress --src 'C:\Users\Docker\Downloads\Downloads_server\' --dest 'C:\Users\Docker\Desktop\bongoDir\'
+
+# Good one Windows for remote (normal path)
+rsync-win -ar --progress -i gcp-vms1 --src 'C:\Users\Docker\Downloads\Downloads_server\' --dest cheatedepk@35.202.173.202:/home/cheatedepk/projects/tempFolder
+
+
+# Good one rsync cygwin windows one liner Remote Monitor
+cd /cygdrive/c/Users/Docker && while true; do rsync -ahPW --quiet --update --progress -e "ssh -i gcp-vms1" cheatedepk@34.30.100.68:/home/cheatedepk/projects/tempFolder/ '/cygdrive/c/Users/Docker/Desktop/monitoreFolder'; sleep 1; done
+
+# Good one rsync cygwin windows one liner Folder Sync
+cd /cygdrive/c/Users/Docker && while true; do rsync -ahPW --quiet --update --progress -e "ssh -i gcp-vms1" '/cygdrive/c/Users/Docker/Desktop/monitoreFolder/' cheatedepk@34.30.100.68:/home/cheatedepk/projects/tempFolder/; sleep 1; done
+
+
+
+
