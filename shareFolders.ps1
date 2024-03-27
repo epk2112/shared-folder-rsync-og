@@ -15,8 +15,11 @@ $actionScript = {
     $changeType = $Event.SourceEventArgs.ChangeType
     Write-Host "File $changeType : $path" -ForegroundColor Green
 
-    # Run rsync-win command
-    $output = & rsync-win -ar --progress  --src "C:\Users\Docker\Desktop\monitoreFolder\" --dest "C:\Users\Docker\Desktop\destFolder\" 2>&1
+    # Run rsync-win command for local machine Directories
+    # $output = & rsync-win -ar --progress  --src "C:\Users\Docker\Desktop\monitoreFolder\" --dest "C:\Users\Docker\Desktop\destFolder\" 2>&1
+
+    # Run rsync-win command for remote machine Directories
+    $output = & rsync-win -ar --progress -i gcp-vms1  --src "C:\Users\Docker\Desktop\monitoreFolder\" --dest cheatedepk@35.202.173.202:/home/cheatedepk/projects/tempFolder/ 2>&1
     Write-Host $output
 }
 
